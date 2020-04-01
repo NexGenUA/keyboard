@@ -6,17 +6,29 @@ class AlphaDigital extends Buttons {
     this.ru = config.ru;
     this.en = config.en;
     this.lang = this.en;
+    this.ctrl = false;
     [this.current] = config.en;
   }
 
   inform(id, value) {
     switch (id) {
       case 'Shift': {
-        if (value) {
+        if (value.pressed) {
           this.current = this.lang[1];
         } else {
           this.current = this.lang[0];
         }
+        break;
+      }
+      case 'CapsLock': {
+        if (value.pressed) {
+          this.current = this.lang[1];
+        } else {
+          this.current = this.lang[0];
+        }
+        break;
+      } case 'Ctrl': {
+        this.ctrl = value.ctrl;
         break;
       }
     }

@@ -5,20 +5,31 @@ class Services extends Buttons {
     super(config);
     this.name = config.name;
     this.pressed = false;
+    this.ctrl = false;
     this.observers = [];
   }
 
   notify() {
-    this.observers.forEach((obs) => obs.inform(this.name, this.pressed));
+    this.observers.forEach((obs) => obs.inform(this.name, this));
   }
 
   keyDown() {
-    this.pressed = true;
+    if (this.id === 'CapsLock') {
+      this.pressed = !this.pressed;
+    } else if (this.name === 'Ctrl') {
+      this.ctrl = true;
+    } else {
+      this.pressed = true;
+    }
     this.notify();
   }
 
   keyUp() {
-    this.pressed = false;
+    if (this.name === 'Ctrl') {
+      this.ctrl = false;
+    } else {
+      this.pressed = false;
+    }
     this.notify();
   }
 

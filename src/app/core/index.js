@@ -1,5 +1,5 @@
-import {alphaDigital} from '../buttons/alpha-digital';
-import {services} from '../buttons/services';
+import { alphaDigital } from '../buttons/alpha-digital';
+import { services } from '../buttons/services';
 
 class MainKeyboard {
   constructor() {
@@ -67,8 +67,7 @@ class MainKeyboard {
       row.append(...node);
       keyboard.append(row);
       appKeyboard.append(keyboard);
-      const array = this.alphaDigitNodes.concat(node);
-      this.alphaDigitNodes = array;
+      this.alphaDigitNodes = this.alphaDigitNodes.concat(node);
     });
   }
 
@@ -95,6 +94,7 @@ class MainKeyboard {
       this.alphaDigKeys.forEach((key) => {
         if (key.id === e.code) {
           area.focus();
+          if (key.ctrl) return;
           area.value += String.fromCodePoint(key.current);
         }
       });
@@ -139,6 +139,12 @@ class MainKeyboard {
         if (btn.name === 'Shift') {
           e.type === 'keydown' ? btn.keyDown() : btn.keyUp();
           render();
+        } else if (btn.name === 'CapsLock') {
+          if (e.type !== 'keydown') return;
+          btn.keyDown();
+          render();
+        } else if (btn.name === 'Ctrl') {
+          e.type === 'keydown' ? btn.keyDown() : btn.keyUp();
         }
       });
     };
