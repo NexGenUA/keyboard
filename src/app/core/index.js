@@ -1,5 +1,5 @@
-import { alphaDigital } from '../buttons/alpha-digital';
-import { services } from '../buttons/services';
+import {alphaDigital} from '../buttons/alpha-digital';
+import {services} from '../buttons/services';
 
 class MainKeyboard {
   constructor() {
@@ -28,6 +28,15 @@ class MainKeyboard {
 
     this.servicesKeys = Object.values(services).flat();
     this.alphaDigKeys = Object.values(alphaDigital).flat();
+    this.alphaDigitNodes = [];
+
+    this.nodesData = () => {
+      const obj = {};
+      this.alphaDigKeys.forEach((data) => {
+        obj[data.id] = data;
+      });
+      return obj;
+    };
   }
 
   start() {
@@ -58,6 +67,8 @@ class MainKeyboard {
       row.append(...node);
       keyboard.append(row);
       appKeyboard.append(keyboard);
+      const array = this.alphaDigitNodes.concat(node);
+      this.alphaDigitNodes = array;
     });
   }
 
@@ -114,13 +125,26 @@ class MainKeyboard {
   }
 
   handleServicesBtn(serviceKeys) {
-    document.addEventListener('keydown', (e) => {
+    const nodesData = this.nodesData();
+
+    const render = () => {
+      this.alphaDigitNodes.forEach((input) => {
+        input.value = String.fromCodePoint(nodesData[input.name].current);
+      });
+    };
+
+    const shiftHandle = (e) => {
       serviceKeys.forEach((btn) => {
         if (e.code !== btn.id) return;
-        btn.keyDown();
-        if (btn.name === 'Shift') this.init();
+        if (btn.name === 'Shift') {
+          e.type === 'keydown' ? btn.keyDown() : btn.keyUp();
+          render();
+        }
       });
-    });
+    };
+
+    document.addEventListener('keydown', shiftHandle);
+    document.addEventListener('keyup', shiftHandle);
   }
 }
 

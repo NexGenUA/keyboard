@@ -12,7 +12,11 @@ class AlphaDigital extends Buttons {
   inform(id, value) {
     switch (id) {
       case 'Shift': {
-        this.current = this.lang[1];
+        if (value) {
+          this.current = this.lang[1];
+        } else {
+          this.current = this.lang[0];
+        }
         break;
       }
     }

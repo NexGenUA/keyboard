@@ -17,6 +17,11 @@ class Services extends Buttons {
     this.notify();
   }
 
+  keyUp() {
+    this.pressed = false;
+    this.notify();
+  }
+
   register(observer) {
     this.observers.push(observer);
   }
