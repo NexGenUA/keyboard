@@ -12,16 +12,16 @@ module.exports = {
 
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
-    port: 4200
+    port: 4200,
   },
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: './src/index.html',
     }),
     new MiniCssExtractPlugin({
-      filename: './style.css'
-    })
+      filename: './style.css',
+    }),
   ],
 
   module: {
