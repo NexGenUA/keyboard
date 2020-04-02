@@ -4,7 +4,8 @@ class Services extends Buttons {
   constructor(config) {
     super(config);
     this.name = config.name;
-    this.pressed = false;
+    this.shift = false;
+    this.caps = false;
     this.ctrl = false;
     this.observers = [];
   }
@@ -15,11 +16,11 @@ class Services extends Buttons {
 
   keyDown() {
     if (this.id === 'CapsLock') {
-      this.pressed = !this.pressed;
+      this.caps = !this.caps;
     } else if (this.name === 'Ctrl') {
       this.ctrl = true;
     } else {
-      this.pressed = true;
+      this.shift = true;
     }
     this.notify();
   }
@@ -28,7 +29,7 @@ class Services extends Buttons {
     if (this.name === 'Ctrl') {
       this.ctrl = false;
     } else {
-      this.pressed = false;
+      this.shift = false;
     }
     this.notify();
   }
@@ -45,6 +46,7 @@ const rows = {
 
   row2: {
     Tab: 'Tab',
+    Delete: 'Del',
   },
 
   row3: {
@@ -62,7 +64,7 @@ const rows = {
     ControlLeft: 'Ctrl',
     Win: 'Win',
     AltLeft: 'Alt',
-    Space: '',
+    Space: ' ',
     AltRight: 'Alt',
     ArrowLeft: '←',
     ArrowDown: '↓',

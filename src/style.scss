@@ -1,3 +1,70 @@
 .active {
   background-color: coral;
 }
+
+.keyboard-print {
+  max-width: 759px;
+  min-width: 759px;
+  height: 100px;
+  outline: none;
+  margin: 2px;
+}
+
+.app-keyboard {
+  width: 770px;
+  padding: 5px;
+  background-color: coral;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.keyboard {
+  display: flex;
+  flex-direction: column;
+  & .button {
+    width: 45px;
+    height: 45px;
+    margin: 2px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all .3s ease;
+    &:hover {
+      background-color: tan;
+    }
+    &:active {
+      background-color: coral;
+      color: wheat;
+    }
+  }
+  & .row {
+    display: flex;
+  }
+  & .backspace {
+    width: 128px;
+  }
+  & .tab {
+    width: 62px;
+  }
+  & .delete {
+    width: 62px;
+  }
+  & .capslock {
+    width: 87px;
+  }
+  & .enter {
+    width: 135px;
+  }
+  & .shiftleft, .shiftright {
+    width: 111px;
+  }
+  & .controlleft, .win, .altleft, .altright {
+    width: 61px;
+  }
+  & .controlright {
+    width: 62px;
+  }
+  & .space {
+    width: 292px;
+  }
+}

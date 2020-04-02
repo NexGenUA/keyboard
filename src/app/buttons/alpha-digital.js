@@ -7,13 +7,33 @@ class AlphaDigital extends Buttons {
     this.en = config.en;
     this.lang = this.en;
     this.ctrl = false;
+    this.caps = false;
     [this.current] = config.en;
+    this.symbols = /[a-zа-яё]/i;
   }
 
   inform(id, value) {
     switch (id) {
       case 'Shift': {
-        if (value.pressed) {
+        const code = this.lang[0];
+        if (this.ctrl && value.shift && this.lang === this.en) {
+          this.lang = this.ru;
+        } else if (this.ctrl && value.shift && this.lang === this.ru) {
+          this.lang = this.en;
+        }
+        if (value.shift && this.caps) {
+          if (!this.symbols.test(String.fromCodePoint(code))) {
+            this.current = this.lang[1];
+            return;
+          }
+          this.current = this.lang[0];
+        } else if (!value.shift && this.caps) {
+          if (!this.symbols.test(String.fromCodePoint(code))) {
+            this.current = this.lang[0];
+            return;
+          }
+          this.current = this.lang[1];
+        } else if (value.shift && !value.caps) {
           this.current = this.lang[1];
         } else {
           this.current = this.lang[0];
@@ -21,7 +41,10 @@ class AlphaDigital extends Buttons {
         break;
       }
       case 'CapsLock': {
-        if (value.pressed) {
+        this.caps = value.caps;
+        if (value.caps) {
+          const code = this.lang[0];
+          if (!this.symbols.test(String.fromCodePoint(code))) return;
           this.current = this.lang[1];
         } else {
           this.current = this.lang[0];

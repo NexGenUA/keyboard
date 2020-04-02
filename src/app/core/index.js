@@ -44,6 +44,7 @@ class MainKeyboard {
     this.pressKey();
     this.upKey();
     this.setObserve();
+    this.onclick();
   }
 
   init() {
@@ -59,6 +60,7 @@ class MainKeyboard {
   render(appKeyboard) {
     const keyboard = document.createElement('div');
     keyboard.classList.add('keyboard');
+    keyboard.setAttribute('id', 'keyboard');
 
     Object.keys(alphaDigital).forEach((key) => {
       const node = alphaDigital[key].map(this.createNodes);
@@ -76,6 +78,7 @@ class MainKeyboard {
     const keyboard = appKeyboard.querySelector('.keyboard');
     this.createServices(rows[1], services.row1[0], 'beforeend');
     this.createServices(rows[2], services.row2[0], 'afterbegin');
+    this.createServices(rows[2], services.row2[1], 'beforeend');
     this.createServices(rows[3], services.row3[0], 'afterbegin');
     this.createServices(rows[3], services.row3[1], 'beforeend');
     this.createServices(rows[4], services.row4[0], 'afterbegin');
@@ -124,25 +127,25 @@ class MainKeyboard {
     this.handleServicesBtn(serviceKeys);
   }
 
-  handleServicesBtn(serviceKeys) {
+  update() {
     const nodesData = this.nodesData();
+    this.alphaDigitNodes.forEach((input) => {
+      input.value = String.fromCodePoint(nodesData[input.name].current);
+    });
+  }
 
-    const render = () => {
-      this.alphaDigitNodes.forEach((input) => {
-        input.value = String.fromCodePoint(nodesData[input.name].current);
-      });
-    };
+  handleServicesBtn(serviceKeys) {
 
     const shiftHandle = (e) => {
       serviceKeys.forEach((btn) => {
         if (e.code !== btn.id) return;
         if (btn.name === 'Shift') {
           e.type === 'keydown' ? btn.keyDown() : btn.keyUp();
-          render();
+          this.update();
         } else if (btn.name === 'CapsLock') {
           if (e.type !== 'keydown') return;
           btn.keyDown();
-          render();
+          this.update();
         } else if (btn.name === 'Ctrl') {
           e.type === 'keydown' ? btn.keyDown() : btn.keyUp();
         }
@@ -151,6 +154,44 @@ class MainKeyboard {
 
     document.addEventListener('keydown', shiftHandle);
     document.addEventListener('keyup', shiftHandle);
+  }
+
+  onclick() {
+    const keyboard = document.getElementById('keyboard');
+    const caps = this.servicesKeys.filter((btn) => btn.id === 'CapsLock')[0];
+    const shift = this.servicesKeys.filter((btn) => btn.id === 'ShiftLeft')[0];
+
+    const mouseClick = (e) => {
+      const { type } = e;
+
+      const button = e.target;
+      const regexp = /^[←↓→↑]|.{2,}$/i;
+
+      if (button.tagName !== 'INPUT') return;
+
+      const { value } = button;
+
+      if (value === 'CapsLock' && type === 'mousedown') {
+        caps.keyDown();
+        this.update();
+        return;
+      }
+
+      if (value === 'Shift') {
+        type === 'mousedown' ? shift.keyDown() : shift.keyUp();
+        this.update();
+        return;
+      }
+
+      if (type === 'mouseup') return;
+      if (regexp.test(value)) return;
+      const area = document.querySelector('#keyboard-print');
+      area.focus();
+      area.value += value;
+    };
+
+    keyboard.addEventListener('mousedown', mouseClick);
+    keyboard.addEventListener('mouseup', mouseClick);
   }
 }
 
