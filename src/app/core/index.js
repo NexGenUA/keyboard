@@ -28,6 +28,7 @@ class MainKeyboard {
 
     this.servicesKeys = Object.values(services).flat();
     this.alphaDigKeys = Object.values(alphaDigital).flat();
+    this.allButtons = [...this.servicesKeys, ...this.alphaDigKeys];
     this.alphaDigitNodes = [];
 
     this.nodesData = () => {
@@ -92,31 +93,20 @@ class MainKeyboard {
   }
 
   pressKey() {
-    const area = document.querySelector('#keyboard-print');
     document.addEventListener('keydown', (e) => {
-      this.alphaDigKeys.forEach((key) => {
-        if (key.id === e.code) {
-          area.focus();
-          if (key.ctrl) return;
-          area.value += String.fromCodePoint(key.current);
-        }
-      });
+      const btn = this.alphaDigKeys.find((key) => key.id === e.code);
+      if (btn) {
+        const value = String.fromCodePoint(btn.current);
+        this.changeInput(value);
+      }
 
-      [...this.alphaDigKeys, ...this.servicesKeys].forEach((key) => {
-        if (key.id === e.code) {
-          key.setActive();
-        }
-      });
+      this.allButtons.find((key) => key.id === e.code).setActive();
     });
   }
 
   upKey() {
     document.addEventListener('keyup', (e) => {
-      [...this.alphaDigKeys, ...this.servicesKeys].forEach((key) => {
-        if (key.id === e.code) {
-          key.removeActive();
-        }
-      });
+      this.allButtons.find((key) => key.id === e.code).removeActive();
     });
   }
 
@@ -135,19 +125,44 @@ class MainKeyboard {
   }
 
   handleServicesBtn(serviceKeys) {
-
     const shiftHandle = (e) => {
+      const { type } = e;
+      if (e.code === 'Space' && type === 'keydown') {
+        this.changeInput(' ');
+        return;
+      }
+
+      if (e.code === 'Delete' && type === 'keydown') {
+        this.changeInput('delete');
+        return;
+      }
+
+      if (e.code === 'Enter' && type === 'keydown') {
+        this.changeInput('enter');
+        return;
+      }
+
+      if (e.code === 'Backspace' && type === 'keydown') {
+        this.changeInput('backspace');
+        return;
+      }
+
+      if (e.code === 'ArrowLeft' && type === 'keydown') {
+        this.arrow('left');
+        return;
+      }
+
       serviceKeys.forEach((btn) => {
         if (e.code !== btn.id) return;
         if (btn.name === 'Shift') {
-          e.type === 'keydown' ? btn.keyDown() : btn.keyUp();
+          type === 'keydown' ? btn.keyDown() : btn.keyUp();
           this.update();
         } else if (btn.name === 'CapsLock') {
-          if (e.type !== 'keydown') return;
+          if (type !== 'keydown') return;
           btn.keyDown();
           this.update();
         } else if (btn.name === 'Ctrl') {
-          e.type === 'keydown' ? btn.keyDown() : btn.keyUp();
+          type === 'keydown' ? btn.keyDown() : btn.keyUp();
         }
       });
     };
@@ -158,8 +173,8 @@ class MainKeyboard {
 
   onclick() {
     const keyboard = document.getElementById('keyboard');
-    const caps = this.servicesKeys.filter((btn) => btn.id === 'CapsLock')[0];
-    const shift = this.servicesKeys.filter((btn) => btn.id === 'ShiftLeft')[0];
+    const caps = this.servicesKeys.find((btn) => btn.id === 'CapsLock');
+    const shift = this.servicesKeys.find((btn) => btn.id === 'ShiftLeft');
 
     const mouseClick = (e) => {
       const { type } = e;
@@ -170,6 +185,20 @@ class MainKeyboard {
       if (button.tagName !== 'INPUT') return;
 
       const { value } = button;
+
+      if (value === 'Del' && type === 'mousedown') {
+        this.changeInput('delete');
+        return;
+      }
+      if (value === 'Backspace' && type === 'mousedown') {
+        this.changeInput('backspace');
+        return;
+      }
+
+      if (value === 'Enter' && type === 'mousedown') {
+        this.changeInput('enter');
+        return;
+      }
 
       if (value === 'CapsLock' && type === 'mousedown') {
         caps.keyDown();
@@ -185,13 +214,51 @@ class MainKeyboard {
 
       if (type === 'mouseup') return;
       if (regexp.test(value)) return;
-      const area = document.querySelector('#keyboard-print');
-      area.focus();
-      area.value += value;
+      this.changeInput(value);
     };
 
     keyboard.addEventListener('mousedown', mouseClick);
     keyboard.addEventListener('mouseup', mouseClick);
+  }
+
+  changeInput(value) {
+    const area = document.querySelector('#keyboard-print');
+    let start = area.selectionStart;
+    let end = area.selectionEnd;
+
+    if (value === 'delete') {
+      if (start < area.value.length && start === end) end++;
+      area.setRangeText('', start, end, 'end');
+      return;
+    }
+
+    if (value === 'backspace') {
+      if (start > 0 && start === end) start--;
+      area.setRangeText('', start, end, 'end');
+      return;
+    }
+
+    if (value === 'enter') {
+      area.setRangeText('\n', start, end, 'end');
+      return;
+    }
+
+    area.setRangeText(value, start, end, 'end');
+    area.focus();
+  }
+
+  arrow(direction) {
+    switch (direction) {
+      case 'left':
+
+        break;
+      case 'right':
+        break;
+      case 'up':
+        break;
+      case 'down':
+
+    }
   }
 }
 
