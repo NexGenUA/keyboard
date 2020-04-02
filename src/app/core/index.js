@@ -100,13 +100,15 @@ class MainKeyboard {
         this.changeInput(value);
       }
 
-      this.allButtons.find((key) => key.id === e.code).setActive();
+      const button = this.allButtons.find((key) => key.id === e.code);
+      if (button) button.setActive();
     });
   }
 
   upKey() {
     document.addEventListener('keyup', (e) => {
-      this.allButtons.find((key) => key.id === e.code).removeActive();
+      const button = this.allButtons.find((key) => key.id === e.code);
+      if (button) button.removeActive();
     });
   }
 
@@ -151,6 +153,22 @@ class MainKeyboard {
         this.arrow('left');
         return;
       }
+
+      if (e.code === 'ArrowRight' && type === 'keydown') {
+        this.arrow('right');
+        return;
+      }
+
+      if (e.code === 'ArrowUp' && type === 'keydown') {
+        this.arrow('up');
+        return;
+      }
+
+      if (e.code === 'ArrowDown' && type === 'keydown') {
+        this.arrow('down');
+        return;
+      }
+
 
       serviceKeys.forEach((btn) => {
         if (e.code !== btn.id) return;
@@ -248,16 +266,31 @@ class MainKeyboard {
   }
 
   arrow(direction) {
+    const area = document.querySelector('#keyboard-print');
+    let start = area.selectionStart;
+    let end = area.selectionEnd;
+    console.log('hi');
     switch (direction) {
       case 'left':
-
+        if (start > 0 && start === end) area.selectionEnd = --start;
+        if (start > 0 && start !== end) area.selectionEnd = start;
         break;
       case 'right':
+        if (start < area.value.length && start === end) area.selectionStart = ++end;
+        if (start < area.value.length && start !== end) area.selectionStart = end;
         break;
       case 'up':
         break;
       case 'down':
-
+        const linesLength = area.value.split('\n').map((arr) => arr.length);
+        let idx = 0;
+        console.log(area.value.split('\n'));
+        console.log(linesLength.reduce((acc, line, i) => {
+          console.log({line, i, acc});
+          if (start > acc) idx = i;
+          return line + acc;
+        }, 0));
+        console.log(area.value.length, {idx, start});
     }
   }
 }

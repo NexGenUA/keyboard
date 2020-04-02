@@ -21,6 +21,7 @@
         "no-unused-expressions": [2, { "allowTernary": true }],
         "no-plusplus": "off",
         "default-case": "off",
-        "class-methods-use-this": "off"
+        "class-methods-use-this": "off",
+        "no-multi-assign": "off"
     }
 }
