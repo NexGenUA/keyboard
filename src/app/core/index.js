@@ -180,8 +180,7 @@ class MainKeyboard {
         if (code !== btn.id) return;
         if (btn.name === 'Shift') {
           type === 'keydown' ? btn.keyDown() : btn.keyUp();
-          const lang = btn.observers.find((el) => el.id === 'Backquote').languageSwitch === 'en';
-          this.languageSwitch(lang);
+          this.renderLanguage();
           this.update();
         } else if (btn.name === 'CapsLock') {
           if (type !== 'keydown') return;
@@ -190,6 +189,7 @@ class MainKeyboard {
           this.capsSwitch(btn.caps);
         } else if (btn.name === 'Ctrl') {
           type === 'keydown' ? btn.keyDown() : btn.keyUp();
+          this.renderLanguage();
           this.update();
         }
       });
@@ -203,6 +203,7 @@ class MainKeyboard {
     const keyboard = document.getElementById('keyboard');
     const caps = this.servicesKeys.find((btn) => btn.id === 'CapsLock');
     const shift = this.servicesKeys.find((btn) => btn.id === 'ShiftLeft');
+    const ctrl = this.servicesKeys.find((btn) => btn.id === 'ControlLeft');
 
     const mouseClick = (e) => {
       const { type } = e;
@@ -238,8 +239,17 @@ class MainKeyboard {
       if (value === 'Shift') {
         type === 'mousedown' ? shift.keyDown() : shift.keyUp();
         this.update();
+        this.renderLanguage();
         return;
       }
+
+      if (value === 'Ctrl') {
+        type === 'mousedown' ? ctrl.keyDown() : ctrl.keyUp();
+        this.renderLanguage();
+        this.update();
+        return;
+      }
+
       if (name === 'ArrowLeft' && type === 'mousedown') {
         this.arrow('left');
         return;
@@ -278,6 +288,7 @@ class MainKeyboard {
     const area = document.querySelector('#keyboard-print');
     let start = area.selectionStart;
     let end = area.selectionEnd;
+
 
     if (value === 'delete') {
       if (start < area.value.length && start === end) end++;
@@ -366,19 +377,19 @@ class MainKeyboard {
     const span = document.querySelector('.lang');
     if (lang) {
       span.innerHTML = 'Language: EN';
-      span.style.marginRight = '5px';
     } else {
       span.innerHTML = 'Language: RU';
-      span.style.marginRight = '4px';
     }
   }
 
+  renderLanguage() {
+    let lang = localStorage.getItem('language');
+    lang = lang ? lang === 'en' : true;
+    this.languageSwitch(lang);
+  }
+
   onload() {
-    document.addEventListener('DOMContentLoaded', () => {
-      let lang = localStorage.getItem('language');
-      lang = lang ? lang === 'en' : true;
-      this.languageSwitch(lang);
-    });
+    document.addEventListener('DOMContentLoaded', this.renderLanguage.bind(this));
   }
 }
 

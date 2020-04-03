@@ -18,7 +18,7 @@ export const appModule = new AppModule({
   selector: 'body',
   elements: `
               <app-keyboard class="app-keyboard" id="app-keyboard">
-                  <textarea class="keyboard-print" id="keyboard-print"></textarea>
+                  <textarea class="keyboard-print" id="keyboard-print" spellcheck="false"></textarea>
               </app-keyboard>
               <div class="info">
                 <span class="lang-info">Для переключения раскладки нажми Ctrl+Shift</span>
