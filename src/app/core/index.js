@@ -47,6 +47,7 @@ class MainKeyboard {
     this.setObserve();
     this.onclick();
     this.onload();
+    this.onBlurShift();
   }
 
   init() {
@@ -284,6 +285,17 @@ class MainKeyboard {
     keyboard.addEventListener('mouseup', mouseClick);
   }
 
+  onBlurShift() {
+    const keyboard = document.querySelector('#keyboard div:nth-child(4)');
+    keyboard.addEventListener('mouseout', (e) => {
+      const { target: input } = e;
+      if (!input || input.tagName !== 'INPUT' || input.value !== 'Shift') return;
+      const shift = this.servicesKeys.find((btn) => btn.id === 'ShiftLeft');
+      shift.keyUp();
+      this.update();
+    });
+  }
+
   changeInput(value) {
     const area = document.querySelector('#keyboard-print');
     let start = area.selectionStart;
@@ -390,6 +402,9 @@ class MainKeyboard {
 
   onload() {
     document.addEventListener('DOMContentLoaded', this.renderLanguage.bind(this));
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelector('#keyboard-print').focus();
+    });
   }
 }
 
