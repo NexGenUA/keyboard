@@ -170,6 +170,10 @@ class MainKeyboard {
         return;
       }
 
+      if (code === 'Tab' && type === 'keydown') {
+        this.changeInput('tab');
+        return;
+      }
 
       serviceKeys.forEach((btn) => {
         if (code !== btn.id) return;
@@ -180,6 +184,7 @@ class MainKeyboard {
           if (type !== 'keydown') return;
           btn.keyDown();
           this.update();
+          this.capsSwitch(btn.caps);
         } else if (btn.name === 'Ctrl') {
           type === 'keydown' ? btn.keyDown() : btn.keyUp();
           this.update();
@@ -223,6 +228,7 @@ class MainKeyboard {
       if (value === 'CapsLock' && type === 'mousedown') {
         caps.keyDown();
         this.update();
+        this.capsSwitch(caps.caps);
         return;
       }
 
@@ -248,6 +254,11 @@ class MainKeyboard {
 
       if (name === 'ArrowDown' && type === 'mousedown') {
         this.arrow('down');
+        return;
+      }
+
+      if (name === 'Tab' && type === 'mousedown') {
+        this.changeInput('tab');
         return;
       }
 
@@ -279,6 +290,11 @@ class MainKeyboard {
 
     if (value === 'enter') {
       area.setRangeText('\n', start, end, 'end');
+      return;
+    }
+
+    if (value === 'tab') {
+      area.setRangeText('\t', start, end, 'end');
       return;
     }
 
@@ -330,6 +346,22 @@ class MainKeyboard {
         area.selectionStart = pos >= len ? start - pos + len + curLen - 1 : newPos;
       }
     }
+  }
+
+  capsSwitch(value) {
+    const span = document.querySelector('.caps');
+    if (value) {
+      span.innerHTML = 'ON';
+      span.classList.add('on');
+    } else {
+      span.innerHTML = 'OFF';
+      span.classList.remove('on');
+    }
+  }
+
+  languageSwitch(lang) {
+    const span = document.querySelector('.lang');
+
   }
 }
 

@@ -19,6 +19,38 @@
   justify-content: flex-start;
 }
 
+.info {
+  width: 760px;
+  display: flex;
+  justify-content: space-between;
+  bottom: -20px;
+  right: 0;
+  height: 30px;
+  background-color: coral;
+  padding: 10px;
+  color: whitesmoke;
+  & span {
+    margin: 0 5px;
+  }
+  & .off {
+    display: inline-block;
+    color: red;
+    width: 32px;
+    background-color: whitesmoke;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+
+  & .on {
+    display: inline-block;
+    width: 25px;
+    margin-right: 12px;
+    color: green;
+  }
+}
+
+
 .keyboard {
   display: flex;
   flex-direction: column;
