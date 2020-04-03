@@ -7,6 +7,7 @@ class AlphaDigital extends Buttons {
     this.en = config.en;
     this.lang = this.en;
     this.ctrl = false;
+    this.shift = false;
     this.caps = false;
     [this.current] = config.en;
     this.symbols = /[a-zа-яё]/i;
@@ -15,6 +16,7 @@ class AlphaDigital extends Buttons {
   inform(id, value) {
     switch (id) {
       case 'Shift': {
+        this.shift = value.shift;
         const code = this.lang[0];
         if (this.ctrl && value.shift && this.lang === this.en) {
           this.lang = this.ru;
@@ -51,6 +53,22 @@ class AlphaDigital extends Buttons {
         }
         break;
       } case 'Ctrl': {
+        const code = this.lang[0];
+        if (value.ctrl && this.shift && this.lang === this.en) {
+          this.lang = this.ru;
+        } else if (value.ctrl && this.shift && this.lang === this.ru) {
+          this.lang = this.en;
+        }
+        if (this.shift && this.caps) {
+          if (!this.symbols.test(String.fromCodePoint(code))) {
+            this.current = this.lang[1];
+            return;
+          }
+          this.current = this.lang[0];
+        }
+        if (this.shift && !this.caps) {
+          this.current = this.lang[1];
+        }
         this.ctrl = value.ctrl;
         break;
       }

@@ -97,6 +97,7 @@ class MainKeyboard {
       const btn = this.alphaDigKeys.find((key) => key.id === e.code);
       if (btn) {
         const value = String.fromCodePoint(btn.current);
+        if (btn.ctrl) return;
         this.changeInput(value);
       }
 
@@ -128,50 +129,50 @@ class MainKeyboard {
 
   handleServicesBtn(serviceKeys) {
     const shiftHandle = (e) => {
-      const { type } = e;
-      if (e.code === 'Space' && type === 'keydown') {
+      const { type, code } = e;
+      if (code === 'Space' && type === 'keydown') {
         this.changeInput(' ');
         return;
       }
 
-      if (e.code === 'Delete' && type === 'keydown') {
+      if (code === 'Delete' && type === 'keydown') {
         this.changeInput('delete');
         return;
       }
 
-      if (e.code === 'Enter' && type === 'keydown') {
+      if (code === 'Enter' && type === 'keydown') {
         this.changeInput('enter');
         return;
       }
 
-      if (e.code === 'Backspace' && type === 'keydown') {
+      if (code === 'Backspace' && type === 'keydown') {
         this.changeInput('backspace');
         return;
       }
 
-      if (e.code === 'ArrowLeft' && type === 'keydown') {
+      if (code === 'ArrowLeft' && type === 'keydown') {
         this.arrow('left');
         return;
       }
 
-      if (e.code === 'ArrowRight' && type === 'keydown') {
+      if (code === 'ArrowRight' && type === 'keydown') {
         this.arrow('right');
         return;
       }
 
-      if (e.code === 'ArrowUp' && type === 'keydown') {
+      if (code === 'ArrowUp' && type === 'keydown') {
         this.arrow('up');
         return;
       }
 
-      if (e.code === 'ArrowDown' && type === 'keydown') {
+      if (code === 'ArrowDown' && type === 'keydown') {
         this.arrow('down');
         return;
       }
 
 
       serviceKeys.forEach((btn) => {
-        if (e.code !== btn.id) return;
+        if (code !== btn.id) return;
         if (btn.name === 'Shift') {
           type === 'keydown' ? btn.keyDown() : btn.keyUp();
           this.update();
@@ -181,6 +182,7 @@ class MainKeyboard {
           this.update();
         } else if (btn.name === 'Ctrl') {
           type === 'keydown' ? btn.keyDown() : btn.keyUp();
+          this.update();
         }
       });
     };
@@ -202,7 +204,7 @@ class MainKeyboard {
 
       if (button.tagName !== 'INPUT') return;
 
-      const { value } = button;
+      const { value, name } = button;
 
       if (value === 'Del' && type === 'mousedown') {
         this.changeInput('delete');
@@ -227,6 +229,25 @@ class MainKeyboard {
       if (value === 'Shift') {
         type === 'mousedown' ? shift.keyDown() : shift.keyUp();
         this.update();
+        return;
+      }
+      if (name === 'ArrowLeft' && type === 'mousedown') {
+        this.arrow('left');
+        return;
+      }
+
+      if (name === 'ArrowRight' && type === 'mousedown') {
+        this.arrow('right');
+        return;
+      }
+
+      if (name === 'ArrowUp' && type === 'mousedown') {
+        this.arrow('up');
+        return;
+      }
+
+      if (name === 'ArrowDown' && type === 'mousedown') {
+        this.arrow('down');
         return;
       }
 
@@ -269,7 +290,20 @@ class MainKeyboard {
     const area = document.querySelector('#keyboard-print');
     let start = area.selectionStart;
     let end = area.selectionEnd;
-    console.log('hi');
+    const getCursorPosition = () => {
+      const linesLength = area.value.split('\n').map((arr) => arr.length + 1);
+      let idx = 0;
+      let pos = 0;
+      linesLength.reduce((acc, line, i) => {
+        if (start >= acc) {
+          pos = start - acc;
+          idx = i;
+        }
+        return line + acc;
+      }, 0);
+      return { linesLength, idx, pos };
+    };
+
     switch (direction) {
       case 'left':
         if (start > 0 && start === end) area.selectionEnd = --start;
@@ -279,18 +313,22 @@ class MainKeyboard {
         if (start < area.value.length && start === end) area.selectionStart = ++end;
         if (start < area.value.length && start !== end) area.selectionStart = end;
         break;
-      case 'up':
+      case 'up': {
+        const { linesLength, idx, pos } = getCursorPosition();
+        if (idx <= 0) return;
+        const len = linesLength[idx - 1];
+        const newPos = len === 1 ? start - pos - 1 : start - len;
+        area.selectionEnd = pos >= len ? start - pos - 1 : newPos;
         break;
-      case 'down':
-        const linesLength = area.value.split('\n').map((arr) => arr.length);
-        let idx = 0;
-        console.log(area.value.split('\n'));
-        console.log(linesLength.reduce((acc, line, i) => {
-          console.log({line, i, acc});
-          if (start > acc) idx = i;
-          return line + acc;
-        }, 0));
-        console.log(area.value.length, {idx, start});
+      }
+      case 'down': {
+        const { linesLength, idx, pos } = getCursorPosition();
+        if (idx >= linesLength.length - 1) return;
+        const len = linesLength[idx + 1];
+        const curLen = linesLength[idx];
+        const newPos = len === 1 ? start + linesLength[idx] - pos : start + linesLength[idx];
+        area.selectionStart = pos >= len ? start - pos + len + curLen - 1 : newPos;
+      }
     }
   }
 }
