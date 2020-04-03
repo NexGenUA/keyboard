@@ -10,6 +10,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background: url('./img/563b9347ab44a.jpg');
 }
 
 .active {
@@ -36,6 +37,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin: 0 auto;
 }
 
 .info {
@@ -48,6 +50,7 @@ body {
   background-color: $back-color;
   padding: 10px;
   color: whitesmoke;
+  margin: 0 auto;
   & span {
     margin: 0 5px;
   }

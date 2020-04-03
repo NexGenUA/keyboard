@@ -46,6 +46,11 @@ module.exports = {
         loader: 'file-loader',
         options: { outputPath: 'fonts' },
       },
+      {
+        test: /\.jpg|jpeg|png$/i,
+        loader: 'file-loader',
+        options: { outputPath: 'img' },
+      },
     ],
   },
 };
