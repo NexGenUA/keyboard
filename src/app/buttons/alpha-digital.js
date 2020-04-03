@@ -9,6 +9,7 @@ class AlphaDigital extends Buttons {
     this.ctrl = false;
     this.shift = false;
     this.caps = false;
+    this.languageSwitch = 'en';
     [this.current] = config.en;
     this.symbols = /[a-zа-яё]/i;
   }
@@ -20,8 +21,10 @@ class AlphaDigital extends Buttons {
         const code = this.lang[0];
         if (this.ctrl && value.shift && this.lang === this.en) {
           this.lang = this.ru;
+          this.languageSwitch = 'ru';
         } else if (this.ctrl && value.shift && this.lang === this.ru) {
           this.lang = this.en;
+          this.languageSwitch = 'en';
         }
         if (value.shift && this.caps) {
           if (!this.symbols.test(String.fromCodePoint(code))) {

@@ -179,6 +179,8 @@ class MainKeyboard {
         if (code !== btn.id) return;
         if (btn.name === 'Shift') {
           type === 'keydown' ? btn.keyDown() : btn.keyUp();
+          const lang = btn.observers.find((el) => el.id === 'Backquote').languageSwitch === 'en';
+          this.languageSwitch(lang);
           this.update();
         } else if (btn.name === 'CapsLock') {
           if (type !== 'keydown') return;
@@ -361,7 +363,13 @@ class MainKeyboard {
 
   languageSwitch(lang) {
     const span = document.querySelector('.lang');
-
+    if (lang) {
+      span.innerHTML = 'Language: EN';
+      span.style.marginRight = '5px';
+    } else {
+      span.innerHTML = 'Language: RU';
+      span.style.marginRight = '4px';
+    }
   }
 }
 
