@@ -5,12 +5,13 @@ class AlphaDigital extends Buttons {
     super(config);
     this.ru = config.ru;
     this.en = config.en;
-    this.lang = this.en;
+    this.langSaved = localStorage.getItem('language');
+    this.lang = this.langSaved ? this[this.langSaved] : this.en;
     this.ctrl = false;
     this.shift = false;
     this.caps = false;
     this.languageSwitch = 'en';
-    [this.current] = config.en;
+    [this.current] = this.langSaved ? config[this.langSaved] : config.en;
     this.symbols = /[a-zа-яё]/i;
   }
 
@@ -22,9 +23,11 @@ class AlphaDigital extends Buttons {
         if (this.ctrl && value.shift && this.lang === this.en) {
           this.lang = this.ru;
           this.languageSwitch = 'ru';
+          localStorage.setItem('language', 'ru');
         } else if (this.ctrl && value.shift && this.lang === this.ru) {
           this.lang = this.en;
           this.languageSwitch = 'en';
+          localStorage.setItem('language', 'en');
         }
         if (value.shift && this.caps) {
           if (!this.symbols.test(String.fromCodePoint(code))) {
@@ -59,8 +62,12 @@ class AlphaDigital extends Buttons {
         const code = this.lang[0];
         if (value.ctrl && this.shift && this.lang === this.en) {
           this.lang = this.ru;
+          this.languageSwitch = 'ru';
+          localStorage.setItem('language', 'ru');
         } else if (value.ctrl && this.shift && this.lang === this.ru) {
           this.lang = this.en;
+          this.languageSwitch = 'en';
+          localStorage.setItem('language', 'en');
         }
         if (this.shift && this.caps) {
           if (!this.symbols.test(String.fromCodePoint(code))) {

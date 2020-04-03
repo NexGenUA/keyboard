@@ -46,6 +46,7 @@ class MainKeyboard {
     this.upKey();
     this.setObserve();
     this.onclick();
+    this.onload();
   }
 
   init() {
@@ -370,6 +371,14 @@ class MainKeyboard {
       span.innerHTML = 'Language: RU';
       span.style.marginRight = '4px';
     }
+  }
+
+  onload() {
+    document.addEventListener('DOMContentLoaded', () => {
+      let lang = localStorage.getItem('language');
+      lang = lang ? lang === 'en' : true;
+      this.languageSwitch(lang);
+    });
   }
 }
 
