@@ -16,7 +16,9 @@ class AppModule {
 
 export const appModule = new AppModule({
   selector: 'body',
-  elements: `
+  elements: `<div class="info develop">
+                <p class="develop-info">Разработано в OS Ubuntu, протестировано в OS Windows под браузеры Chrome, Opera и Firefox</p>
+              </div>
               <app-keyboard class="app-keyboard" id="app-keyboard">
                   <textarea class="keyboard-print" id="keyboard-print" spellcheck="false"></textarea>
               </app-keyboard>

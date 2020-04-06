@@ -1,5 +1,5 @@
 html {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Share Tech Mono', 'Anonymous Pro', monospace;
 }
 
 $back-color: darkgrey;
@@ -13,15 +13,11 @@ body {
   background: url('./img/563b9347ab44a.jpg');
 }
 
-.active {
-  background-color: $active;
-}
-
 .keyboard-print {
-  font-family: 'Share Tech Mono', monospace;
+  font-family: 'Share Tech Mono', 'Anonymous Pro', monospace;
   max-width: 759px;
   min-width: 759px;
-  height: 300px;
+  height: 250px;
   outline: none;
   margin: 2px;
   color: rgb(0,153,51);
@@ -46,7 +42,7 @@ body {
   justify-content: space-between;
   bottom: -20px;
   right: 0;
-  height: 30px;
+  height: 25px;
   background-color: $back-color;
   padding: 10px;
   color: whitesmoke;
@@ -72,6 +68,13 @@ body {
   }
 }
 
+.info.develop {
+  height: 7px;
+  & p {
+    font-size: 15px;
+    margin: auto;
+  }
+}
 
 .keyboard {
   display: flex;
@@ -81,16 +84,21 @@ body {
     height: 45px;
     margin: 2px;
     font-size: 16px;
+    box-shadow: 1px 1px 2px rgb(236, 236, 236);
     cursor: pointer;
-    transition: all .3s ease;
+    transition: all .2s ease;
     font-family: 'Share Tech Mono', monospace;
     border: none;
     color: grey;
     &:hover {
       background-color: $hover;
+      box-shadow: 1px 1px 2px rgb(136, 136, 136);
     }
     &:active {
+      box-shadow: none;
+      transform: translate(1px, 1px);
       background-color: $active;
+      border-radius: 2px;
       color: wheat;
     }
   }
@@ -123,5 +131,11 @@ body {
   }
   & .space {
     width: 292px;
+  }
+  & .active {
+    background-color: $active;
+    box-shadow: none;
+    transform: translate(1px, 1px);
+    border-radius: 2px;
   }
 }

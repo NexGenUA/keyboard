@@ -132,49 +132,25 @@ class MainKeyboard {
   handleServicesBtn(serviceKeys) {
     const shiftHandle = (e) => {
       const { type, code } = e;
-      if (code === 'Space' && type === 'keydown') {
-        this.changeInput(' ');
-        return;
-      }
 
-      if (code === 'Delete' && type === 'keydown') {
-        this.changeInput('delete');
-        return;
-      }
+      const testButton = /delete|enter|backspace|tab/i;
+      const testArrow = /ArrowLeft|ArrowRight|ArrowUp|ArrowDown/i;
 
-      if (code === 'Enter' && type === 'keydown') {
-        this.changeInput('enter');
-        return;
-      }
+      if (type === 'keydown') {
+        if (testButton.test(code)) {
+          this.changeInput(code.toLowerCase());
+          return;
+        }
 
-      if (code === 'Backspace' && type === 'keydown') {
-        this.changeInput('backspace');
-        return;
-      }
+        if (code === 'Space') {
+          this.changeInput(' ');
+          return;
+        }
 
-      if (code === 'ArrowLeft' && type === 'keydown') {
-        this.arrow('left');
-        return;
-      }
-
-      if (code === 'ArrowRight' && type === 'keydown') {
-        this.arrow('right');
-        return;
-      }
-
-      if (code === 'ArrowUp' && type === 'keydown') {
-        this.arrow('up');
-        return;
-      }
-
-      if (code === 'ArrowDown' && type === 'keydown') {
-        this.arrow('down');
-        return;
-      }
-
-      if (code === 'Tab' && type === 'keydown') {
-        this.changeInput('tab');
-        return;
+        if (testArrow.test(code)) {
+          this.arrow(code);
+          return;
+        }
       }
 
       serviceKeys.forEach((btn) => {
@@ -347,15 +323,15 @@ class MainKeyboard {
     };
 
     switch (direction) {
-      case 'left':
+      case 'ArrowLeft':
         if (start > 0 && start === end) area.selectionEnd = --start;
         if (start > 0 && start !== end) area.selectionEnd = start;
         break;
-      case 'right':
+      case 'ArrowRight':
         if (start < area.value.length && start === end) area.selectionStart = ++end;
         if (start < area.value.length && start !== end) area.selectionStart = end;
         break;
-      case 'up': {
+      case 'ArrowUp': {
         const { linesLength, idx, pos } = getCursorPosition();
         if (idx <= 0) return;
         const len = linesLength[idx - 1];
@@ -363,12 +339,12 @@ class MainKeyboard {
         area.selectionEnd = pos >= len ? start - pos - 1 : newPos;
         break;
       }
-      case 'down': {
+      case 'ArrowDown': {
         const { linesLength, idx, pos } = getCursorPosition();
         if (idx >= linesLength.length - 1) return;
         const len = linesLength[idx + 1];
         const curLen = linesLength[idx];
-        const newPos = len === 1 ? start + linesLength[idx] - pos : start + linesLength[idx];
+        const newPos = len === 1 ? start + curLen - pos : start + curLen;
         area.selectionStart = pos >= len ? start - pos + len + curLen - 1 : newPos;
       }
     }
