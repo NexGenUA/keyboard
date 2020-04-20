@@ -23,5 +23,5 @@ $ npm run server
      
 
 ```jsvascript
-$ npm test
+$ npm run lint
 ```
