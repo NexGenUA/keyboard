@@ -228,22 +228,22 @@ class MainKeyboard {
       }
 
       if (name === 'ArrowLeft' && type === 'mousedown') {
-        this.arrow('left');
+        this.arrow(name);
         return;
       }
 
       if (name === 'ArrowRight' && type === 'mousedown') {
-        this.arrow('right');
+        this.arrow(name);
         return;
       }
 
       if (name === 'ArrowUp' && type === 'mousedown') {
-        this.arrow('up');
+        this.arrow(name);
         return;
       }
 
       if (name === 'ArrowDown' && type === 'mousedown') {
-        this.arrow('down');
+        this.arrow(name);
         return;
       }
 
